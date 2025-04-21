@@ -17,5 +17,7 @@ __pycache__/
 .vscode/
 
 # Result File- Ergebnisse Dateien
-/results/*
-#!results/keep_this.png
+results/*
+
+# .gitkeep  - Datei ausschließen !!!
+!results/.gitkeep
