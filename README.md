@@ -22,5 +22,6 @@ torch.Size([64]) für die Labels
 → Das bedeutet, 64 Graustufenbilder (1 Kanal) mit 28x28 Pixeln wurden korrekt geladen.
 
 
+![image](https://github.com/user-attachments/assets/11cc36bc-2b7b-4b89-b39f-3da408f195c4)
 
 
