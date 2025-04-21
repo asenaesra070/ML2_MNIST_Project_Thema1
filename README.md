@@ -1,5 +1,9 @@
 # ML2_MNIST_Project_Thema1
 Projektarbeit für ML II: AE vs GAN mit MNIST/Fashion-MNIST
+
+
+
+
 📅 21.04.2025 – Erste Struktur & Datenprüfung
 ➕ Neue Dateien:
 data/data_loader.py:
