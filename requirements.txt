@@ -1,0 +1,8 @@
+# Diese Datei listet die Python-Bibliotheken auf, die wir im Projekt verwenden werden.
+# Auf diese Weise kann jeder, der dasselbe Repo wie Sie klont, seine Umgebung mit einem einzigen Befehl einrichten:
+numpy                                       # Numerische Operationen (Matrizen, Vektoren usw.)
+matplotlib                                  # Grafisches Zeichnen, Visualisierung
+torch                                       # PyTorch – die Grundlage Modellen für Deep Learning
+torchvision                                 # Datensätze (MNIST, CIFAR) und visuelle Operationen, die mit PyTorch geliefert werden
+scikit-learn                                # Klassische ML-Modelle, Metriken
+notebook                                    # So führen Sie Jupyter Notebook aus
