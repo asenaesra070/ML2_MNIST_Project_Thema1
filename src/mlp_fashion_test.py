@@ -1,4 +1,4 @@
-"""Die .pth-Datei in den Ergebnissen als Modell wird nicht als Python-Modul (.py) importiert.
+"""Die .pth-Datei in den Ergebnissen als Modell wird nicht als Python-Modul (.py)
  Die .pth-Datei wird mit der Funktion torch.load() von PyTorch geladen.
  Es wird dann als state_dict in das Modell geladen."""
 import torch
@@ -11,4 +11,3 @@ model.load_state_dict(torch.load('../results/mlp_fashion_model.pth'))
 model.eval()
 
 print("Model aufgelanden")
-

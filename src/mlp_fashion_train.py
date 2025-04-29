@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim                                 # Mit optim können wir Modellparameter updaten (Training!)
 import os
-
+import numpy as np
 from models.mlp_fashion_model import FashionMNIST_MLP       # Modell importieren
 from data.data_loader import get_fashionmnist_dataloaders   # Dataloader/ get_fashionista_dataloaders importieren
 from test.data_check import train_loader
@@ -36,9 +36,10 @@ Wir erwarten klein loss wert"""
 criterion = nn.CrossEntropyLoss()
 
 # ----------- TRAININGSSCHLEIFE-------------------------------
+loss_values = []                                # Leere Liste zur Aufnahme epochen basierter Verlustwerte
 for epochs in range (number_epochs):
-    model.train()                    # Wir versetzen das Modell in den Trainingsmodus.
-    running_loss_summe = 0.0         # Zur Berechnung des durchschnittlichen Verlustes wird hier der Gesamtverlust über mehrere Epochen hinweg erfasst.
+    model.train()                               # Wir versetzen das Modell in den Trainingsmodus.
+    running_loss_summe = 0.0                    # Zur Berechnung des durchschnittlichen Verlustes wird hier der Gesamtverlust über mehrere Epochen hinweg erfasst.
     for images, labels in train_loader:
         images, labels = images.to(device), labels.to(device)  # CPU
         # print(images.device, labels.device)
@@ -54,7 +55,7 @@ for epochs in range (number_epochs):
         optimizer.step()
         # Wir addieren den Verlustwert dieser Charge (.item) zur Variable running_loss.
         running_loss_summe += loss.item()
-
+    loss_values.append(running_loss_summe / len(train_loader))   # loss_values wird summiert in jede epochs
     print(f"Epoch [{epochs + 1}/{number_epochs}], Loss: {running_loss_summe / len(train_loader):.4f}")
 print("Training finished")
 
@@ -70,8 +71,12 @@ torch.save(model.state_dict(), save_path)
 print(f"Modell wurde gespeichert unter {save_path} als result von Trainings")
 
 
+# Die .npy-Datei ist wie das „Gedächtnis“ des Modells → Hier wird die trainierte verllusst mit numerics des Modells gespeichert.
 
-
+os.makedirs("../results", exist_ok=True)
+save_path = "../results/loss_values.npy"
+np.save(save_path, loss_values)
+print(f"Trainingsverlust-Liste : {save_path}")
 
 
 
