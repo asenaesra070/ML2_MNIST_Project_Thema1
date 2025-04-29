@@ -3,8 +3,7 @@ Projektarbeit für ML II: AE vs GAN mit MNIST/Fashion-MNIST
 
 
 
-
-📅 21.04.2025 – Erste Struktur & Datenprüfung
+📅 21.04.2025 – Erste Struktur & Datenprüfung & Datenaufladen
 
 * Neue Dateien:
 data/data_loader.py:
@@ -23,5 +22,11 @@ torch.Size([64]) für die Labels
 
 
 ![image](https://github.com/user-attachments/assets/11cc36bc-2b7b-4b89-b39f-3da408f195c4)
+
+
+📅 28.04.2025 – Modelerstellen und trainieren,testen
+📅 29.04.2025 – Plotten,tabellen
+
+![image](https://github.com/user-attachments/assets/e55ebf6e-9187-477e-9caf-21cd0f0d10e9)
 
 
