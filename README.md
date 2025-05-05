@@ -30,3 +30,4 @@ torch.Size([64]) für die Labels
 ![image](https://github.com/user-attachments/assets/e55ebf6e-9187-477e-9caf-21cd0f0d10e9)
 
 
+📅 05.05.2025 – Confusion Matrix Lernen und damit arbeiten
