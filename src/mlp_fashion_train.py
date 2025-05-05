@@ -6,6 +6,7 @@ import os
 import numpy as np
 from models.mlp_fashion_model import FashionMNIST_MLP       # Modell importieren
 from data.data_loader import get_fashionmnist_dataloaders   # Dataloader/ get_fashionista_dataloaders importieren
+from src.mlp_fashion_plot import accuracy_loaded, accuracy, save_path_acc
 from test.data_check import train_loader
 
 # Gerät festlegen (GPU, falls vorhanden, sonst CPU) und also GPU ist schneller als CPU
@@ -77,6 +78,5 @@ os.makedirs("../results", exist_ok=True)
 save_path = "../results/loss_values.npy"
 np.save(save_path, loss_values)
 print(f"Trainingsverlust-Liste : {save_path}")
-
-
-
+# Accuracy
+print(f"Accuracy-Wert wurde gespeichert unter {save_path_acc}")

@@ -1,12 +1,12 @@
 from typing import List
-
-import torch                                                    # PyTorch-Bibliothek – für maschinelle Lernmodelle und Tensorberechnungen.
-import matplotlib.pyplot as plt                                 # Wird zum grafischen Zeichnen verwendet (z. B. zum Anzeigen von images).
-import numpy as np                                              # Numerische Verfahren
-from models.mlp_fashion_model import FashionMNIST_MLP           # Modell importieren
-from data.data_loader import get_fashionmnist_dataloaders       # Daten importieren
-
-
+import torch                                                            # PyTorch-Bibliothek – für maschinelle Lernmodelle und Tensorberechnungen.
+import matplotlib.pyplot as plt                                         # Wird zum grafischen Zeichnen verwendet (z. B. zum Anzeigen von images).
+import numpy as np                                                      # Numerische Verfahren
+from models.mlp_fashion_model import FashionMNIST_MLP                   # Modell importieren
+from data.data_loader import get_fashionmnist_dataloaders               # Daten importieren
+from sklearn.metrics import confusion_matrix    # Confusion Matrix = Die Klassen zeigt, die das Modell verwechselt.
+import seaborn as sns
+import pandas as pd
 
 # --- Model Aufladen und Eval Mode ------------------------------------------------------------------
 model = FashionMNIST_MLP()                                      # Model Aufladen
@@ -44,23 +44,59 @@ plt.show()
 # ----- Wir berechnen die Genauigkeit(Accuracy) des Modells:
 correct = 0
 sum = 0
+all_preds = []                                                     # Alle vom Modell vorhergesagten Werte werden hier gespeichert.
+all_labels = []
+
+# Hier sind die richtigen Klassenbezeichnungen hinterlegt.
 with torch.no_grad():
     for images, labels in test_loader:
         outputs = model(images)
         values, predictions = torch.max(outputs, 1)
         sum += labels.size(0)
         correct += (labels == predictions).sum().item()
-accuracy = 100 * correct / sum                                      # Die richtige Vorhersagerate wird als Prozentsatz berechnet.
+        # ---- Confusion Matrix------------------------
+        all_preds.extend(predictions.cpu().numpy())
+        all_labels.extend(labels.cpu().numpy())
+accuracy = 100 * correct / sum                                      # Die richtige Vorhersage rate wird als Prozentsatz berechnet.
 print(f"Accuracy/Testdatensatz: {accuracy:.2f}%")
 
+# ---- Confusion Matrix------------------------
+confmat = confusion_matrix(all_labels, all_preds)                   # Confusion Matrix Berechnet
+df_cm = pd.DataFrame(confmat, index=class_fashion_names, columns=class_fashion_names)       #
+print("Lange der Vorhersagten Werte:", len(all_preds), " Lange des Label:", len(all_labels))
+print("Confusion matrix shape:", confmat.shape)
 
 #----- Laden und Plotten der Trainingsverlust aus einer Datei
 loss_values = np.load("../results/loss_values.npy")
+#-------Laden der Accuracy
+save_path_acc = '../results/accuracy_value.npy'
+np.save(save_path_acc, np.array([accuracy]))
 
-# Plot çiz
+
+# Plotten
 plt.plot(loss_values)
 plt.xlabel("Epoche")
 plt.ylabel("Loss")
 plt.title("Loss pro Epoche")
 plt.grid(True)
 plt.show()
+
+# Confusion Matrix = Dies ist eine Tabelle, die die Klassen zeigt, die das Modell verwechselt.
+# Zeilen: Tatsächliche Beschriftungen
+# Spalten: Modellvorhersagen
+# Plotten
+plt.figure(figsize=(10, 8))
+sns.heatmap(df_cm, annot=True, fmt='d', cmap='Greens')
+plt.title("Confusion Matrix - Fashion MNIST")
+plt.xlabel("Vorhersage Label")
+plt.ylabel("True Label")
+plt.tight_layout()                                               # sorgt dafür, dass sich die Elemente im Plot nicht überschneiden
+plt.savefig("../results/confusion_matrix.png")
+plt.show()
+
+# ---- Shirt, Pullover, Dress -------------------------------------
+# ?  Data Augmentation
+# ?  (Convolutional Neural Network - nein
+# ?  class weights in Loss Function
+# ?  Merkmalsextraktion z.B. mit AutoEncoder: WAS MACHEN WIR !
+# ? Regularisierungstechniken:

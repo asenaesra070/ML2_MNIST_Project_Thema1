@@ -19,5 +19,10 @@ __pycache__/
 # Result File- Ergebnisse Dateien
 results/*
 
-# .gitkeep  - Datei ausschließen !!!
+# - Datei ausschließen !!!
 !results/.gitkeep
+results/*
+!results/README.md
+
+!results/*.pth
+!results/*.npy
