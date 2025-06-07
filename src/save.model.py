@@ -9,6 +9,6 @@ model = MLP()
 filename = "mlp_ziffern_model.pt"
 
 # Speichern
-print("📁 Modell wird gespeichert im Pfad:", os.getcwd())
+print(" Modell wird gespeichert im Pfad:", os.getcwd())
 torch.save(model.state_dict(), filename)
-print("✅ Modell wurde gespeichert als:", filename)
+print(" Modell wurde gespeichert als:", filename)

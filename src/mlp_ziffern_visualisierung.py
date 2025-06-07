@@ -15,12 +15,12 @@ class MLP(nn.Module):
         super(MLP, self).__init__()
         self.model = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(784, 256),
+            nn.Linear(784, 128),
             nn.ReLU(),
-            nn.Linear(256, 128),
+            nn.Linear(128, 64),
             nn.ReLU(),
-            nn.Linear(128, 10)
-        )
+            nn.Linear(64, 10),
+            nn.ReLU(),
 
     def forward(self, x):
         return self.model(x)
@@ -49,7 +49,7 @@ with torch.no_grad():
 
 # 1. Genauigkeit anzeigen
 acc = accuracy_score(y_true, y_pred)
-print(f"✅ Testgenauigkeit: {acc * 100:.2f}%")
+print(f" Testgenauigkeit: {acc * 100:.2f}%")
 
 # 2. Konfusionsmatrix plotten
 cm = confusion_matrix(y_true, y_pred)

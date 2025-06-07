@@ -22,12 +22,12 @@ class MLP(nn.Module):
     def __init__(self):
         super(MLP, self).__init__()
         self.model = nn.Sequential(
-            nn.Flatten(),           # 28x28 → 784
-            nn.Linear(784, 256),
+            nn.Flatten(),  # 28x28 → 784
+            nn.Linear(784, 128),  # 784 → 128
             nn.ReLU(),
-            nn.Linear(256, 128),
+            nn.Linear(128, 64),  # 128 → 64
             nn.ReLU(),
-            nn.Linear(128, 10)     # 10 Klassen (Ziffern 0–9)
+            nn.Linear(64, 10)  # 64 → 10 Klassen (Ziffern 0–9)
         )
 
     def forward(self, x):

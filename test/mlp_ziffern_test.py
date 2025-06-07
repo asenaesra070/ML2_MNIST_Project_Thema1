@@ -17,11 +17,11 @@ class MLP(nn.Module):
         super(MLP, self).__init__()
         self.model = nn.Sequential(
             nn.Flatten(),               # 28x28 → 784
-            nn.Linear(784, 256),
+            nn.Linear(784, 128),
             nn.ReLU(),
-            nn.Linear(256, 128),
+            nn.Linear(128, 64),
             nn.ReLU(),
-            nn.Linear(128, 10)         # 10 Klassen für Ziffern 0–9
+            nn.Linear(64, 10)         # 10 Klassen für Ziffern 0–9
         )
 
     def forward(self, x):
@@ -47,4 +47,4 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
 
 accuracy = 100 * correct / total
-print(f"🎯 Testgenauigkeit: {accuracy:.2f}%")
+print(f" Testgenauigkeit: {accuracy:.2f}%")
