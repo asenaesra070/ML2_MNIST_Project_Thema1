@@ -22,7 +22,7 @@ results/*
 # - Datei ausschließen !!!
 !results/.gitkeep
 results/*
-!results/README.md
+!README.md
 
 !results/*.pth
 !results/*.npy

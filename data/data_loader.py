@@ -2,7 +2,12 @@ import torch
 from torchvision import datasets, transforms
 
 def get_fashionmnist_dataloaders (batch_size=64):                                                    # 64 ist eine sehr gute Batchgröße entsprechend den gegebenen Datensätzen: Sowohl schnell als auch computerfreundlich (In der Praxis werden häufig Werte wie 32, 64, 128 verwendet.)
-    transform = transforms.ToTensor()                                                               # Bilder werden in Tensoren umgewandelt ; feature scaling (0–255 → 0–1)
+    # transform = transforms.ToTensor()                                                              # Bilder werden in Tensoren umgewandelt ; feature scaling (0–255 → 0–1)
+    # Diese Zeile konvertiert die Graustufenpixelwerte (0 bis 1) in den Fashion-MNIST-Daten in den Bereich [-1, 1], in dem die Funktion Tanh() arbeiten kann.
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize([0.5], [0.5])                                                          # [0,1] → [-1,1]
+    ])
 
     train_data = datasets.FashionMNIST(root='data', train=True, download=True, transform=transform)
     test_data = datasets.FashionMNIST(root='data', train=False, download=True, transform=transform)

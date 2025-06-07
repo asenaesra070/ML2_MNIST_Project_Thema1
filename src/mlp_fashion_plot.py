@@ -1,21 +1,24 @@
 from typing import List
 import torch                                                            # PyTorch-Bibliothek – für maschinelle Lernmodelle und Tensorberechnungen.
+import os
 import matplotlib.pyplot as plt                                         # Wird zum grafischen Zeichnen verwendet (z. B. zum Anzeigen von images).
 import numpy as np                                                      # Numerische Verfahren
-from models.mlp_fashion_model import FashionMNIST_MLP                   # Modell importieren
 from data.data_loader import get_fashionmnist_dataloaders               # Daten importieren
-from sklearn.metrics import confusion_matrix    # Confusion Matrix = Die Klassen zeigt, die das Modell verwechselt.
+from sklearn.metrics import confusion_matrix                            # Confusion Matrix = Die Klassen zeigt, die das Modell verwechselt.
+# from mlp_fashion_test import test_model
+from torch.nn import CrossEntropyLoss
+from models.mlp_fashion_model import FashionMNIST_MLP                   # Modell importieren
 import seaborn as sns
 import pandas as pd
 
 # --- Model Aufladen und Eval Mode ------------------------------------------------------------------
 model = FashionMNIST_MLP()                                      # Model Aufladen
-# Dabei werden die trainierten Gewichte aus der Datei „results/mlp_fashion_model.pth“ in dieses test Modell geladen.
-model.load_state_dict(torch.load('../results/mlp_fashion_model.pth'))
+# Dabei werden die trainierten Gewichte aus der Datei „results/mlp_fashion_trainierte_model.pth“ in dieses test Modell geladen.
+model.load_state_dict(torch.load('../results/mlp_fashion_trainierte_model.pth'))
 model.eval()                                                    # „Evaluierungsmodus“ – in diesem Modus sind während des Trainings verwendete Techniken wie Dropout deaktiviert.
-print("Model loaded")
-
+print("Model geladen")
 _,test_loader = get_fashionmnist_dataloaders()                   # Test Dataloader
+
 
 # ----- 10 Klassen in den FashionMNIST Datensätz (label bedeutung) - Supervised Learning-------------
 class_fashion_names = ['T-Shirt', 'Trouser', 'Pullover', 'Dress', 'Coat',
@@ -43,7 +46,7 @@ plt.show()
 
 # ----- Wir berechnen die Genauigkeit(Accuracy) des Modells:
 correct = 0
-sum = 0
+total = 0
 all_preds = []                                                     # Alle vom Modell vorhergesagten Werte werden hier gespeichert.
 all_labels = []
 
@@ -52,39 +55,43 @@ with torch.no_grad():
     for images, labels in test_loader:
         outputs = model(images)
         values, predictions = torch.max(outputs, 1)
-        sum += labels.size(0)
+        total += labels.size(0)
         correct += (labels == predictions).sum().item()
         # ---- Confusion Matrix------------------------
         all_preds.extend(predictions.cpu().numpy())
         all_labels.extend(labels.cpu().numpy())
-accuracy = 100 * correct / sum                                      # Die richtige Vorhersage rate wird als Prozentsatz berechnet.
+accuracy = 100 * correct / total                                    # Die richtige Vorhersage rate wird als Prozentsatz berechnet.
 print(f"Accuracy/Testdatensatz: {accuracy:.2f}%")
 
-# ---- Confusion Matrix------------------------
-confmat = confusion_matrix(all_labels, all_preds)                   # Confusion Matrix Berechnet
-df_cm = pd.DataFrame(confmat, index=class_fashion_names, columns=class_fashion_names)       #
-print("Lange der Vorhersagten Werte:", len(all_preds), " Lange des Label:", len(all_labels))
-print("Confusion matrix shape:", confmat.shape)
 
-#----- Laden und Plotten der Trainingsverlust aus einer Datei
-loss_values = np.load("../results/loss_values.npy")
+# ----Trainings- und Test-Loss laden
+train_loss = np.load("../results/loss_values.npy")
+test_loss = np.load("../results/loss_values_test.npy")   # erwartet nicht : np.array([0.33]) Format anstatt das ich würde 10 wertige test loss???
+print(test_loss) # [0.32146616]
 #-------Laden der Accuracy
 save_path_acc = '../results/accuracy_value.npy'
 np.save(save_path_acc, np.array([accuracy]))
 
 
-# Plotten
-plt.plot(loss_values)
+# Plotten: Training Loss für jede Epochs
+plt.plot(train_loss)    # schaue mal nochmal
 plt.xlabel("Epoche")
 plt.ylabel("Loss")
 plt.title("Loss pro Epoche")
 plt.grid(True)
 plt.show()
 
-# Confusion Matrix = Dies ist eine Tabelle, die die Klassen zeigt, die das Modell verwechselt.
+
+"""Confusion Matrix = Dies ist eine Tabelle, die die Klassen zeigt, die das Modell verwechselt.
 # Zeilen: Tatsächliche Beschriftungen
 # Spalten: Modellvorhersagen
-# Plotten
+# Plotten"""
+# ---- Plotten : Confusion Matrix ------------------------
+confmat = confusion_matrix(all_labels, all_preds)                   # Confusion Matrix Berechnet
+df_cm = pd.DataFrame(confmat, index=class_fashion_names, columns=class_fashion_names)       #
+print("Lange der Vorhersagten Werte:", len(all_preds), " Lange des Label:", len(all_labels))
+print("Confusion matrix shape:", confmat.shape)
+
 plt.figure(figsize=(10, 8))
 sns.heatmap(df_cm, annot=True, fmt='d', cmap='Greens')
 plt.title("Confusion Matrix - Fashion MNIST")
@@ -94,9 +101,24 @@ plt.tight_layout()                                               # sorgt dafür,
 plt.savefig("../results/confusion_matrix.png")
 plt.show()
 
+# Plotten: Trainings- und Test-Loss Gemeinsame Nutzung
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, len(train_loss) + 1), train_loss, label='Train Loss', color='blue', linewidth=2)
+plt.plot(range(1, len(test_loss) + 1), test_loss, label='Test Loss', color='red', linestyle='--', linewidth=2)
+plt.xlabel('Epoche')
+plt.ylabel('Loss')
+plt.title('Trainings- und Test-Loss pro Epoche')
+plt.legend(loc='upper right')
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.savefig('../results/loss_comparison_plot.png')
+plt.show()
+
+os.makedirs("../results", exist_ok=True)
+np.save("../results/accuracy_value.npy", np.array([accuracy]))
+
 # ---- Shirt, Pullover, Dress -------------------------------------
-# ?  Data Augmentation
-# ?  (Convolutional Neural Network - nein
-# ?  class weights in Loss Function
+# ?  Data Augmentation pandas ? was willst du machen
+# ?  class weights in Loss Function schon geprinted X
 # ?  Merkmalsextraktion z.B. mit AutoEncoder: WAS MACHEN WIR !
 # ? Regularisierungstechniken:
