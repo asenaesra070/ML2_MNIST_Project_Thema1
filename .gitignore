@@ -26,3 +26,4 @@ results/*
 
 !results/*.pth
 !results/*.npy
+!results/*.png
