@@ -57,6 +57,7 @@ for name, param in model.named_parameters():
 ```
 
 
+![test_loss_plot](https://github.com/user-attachments/assets/b961ac50-eaee-4daa-84c3-b30ae6af50e5)
 
 
 # Zusammenfassung für Convolutional Transpose für GAN Generator/ Discriminators
@@ -68,3 +69,11 @@ for name, param in model.named_parameters():
 | `ConvTranspose2d(latent_dim, 128, 7, 1, 0)` | Erstellt eine 7x7-Feature-Map mit 128 Filtern |
 | `→ 64 → 1` | Vergrößert auf 14x14 und 28x28 und erreicht die tatsächliche Größe |
 | `Tanh()` | Normalisiert Pixelwerte zwischen -1 und 1 |
+
+
+# Schluss
+
+![gan_loss_plot](https://github.com/user-attachments/assets/fbf2360f-0748-45e8-93eb-a0c58966c4eb)
+![loss_comparison_plot](https://github.com/user-attachments/assets/62ef8b9d-8aae-4acb-b3ea-b68dc43a5609)
+
+
