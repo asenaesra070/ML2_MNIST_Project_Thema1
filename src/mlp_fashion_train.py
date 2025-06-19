@@ -1,4 +1,4 @@
-# mlp_fashion_train.py – Trainingslogik für AE vs GAN Modelle
+# mlp_fashion_train.py – Trainingslogik für MLP- AE vs GAN Modelle
 import torch
 import torch.nn as nn
 import torch.optim as optim                                 # Mit optim können wir Modellparameter updaten (Training!)
@@ -100,15 +100,15 @@ np.save('../results/loss_values_test.npy', np.array(loss_values_test))
 print("Testverlust-Liste gespeichert unter ../results/loss_values_test.npy")
 
 
-
-
 # -------MODELL SPEICHERN FÜR TRAININGS-------------
-# Die .pth-Datei ist wie das „Gedächtnis“ des Modells → Hier wird die trainierte Version des Modells gespeichert.
+# Die .pth-Datei ist wie das „Gedächtnis“ des Modells
+# → Hier wird die trainierte Version des Modells gespeichert.
 os.makedirs(name='../results', exist_ok=True)
 torch.save(model.state_dict(), '../results/mlp_fashion_trainierte_model.pth')
 print("Modell wurde gespeichert mit ihre Gewichte unter results/mlp_fashion_trainierte_model.pth")
 
-# Die .npy-Datei ist wie das „Gedächtnis“ des Modells → Hier wird die trainierte verllusst mit numerics des Modells gespeichert.
+# Die .npy-Datei ist wie das „Gedächtnis“ des Modells
+# → Hier wird die trainierte verllusst mit numerics des Modells gespeichert.
 save_path = "../results/loss_values.npy"
 np.save(save_path, loss_values_train)
 print(f"Trainingsverlust-Liste : {save_path}")

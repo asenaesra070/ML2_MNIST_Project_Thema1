@@ -3,6 +3,12 @@ import numpy as np
 import torch.nn as nn                                               # Modellarchitektur & Verlustfunktionen
 import torch.optim as optim                                         # Optimierer für Gewichtsanpassung
 from torchvision.utils import save_image                            # Visualisierung der Ergebnisse
+from models.mlp_fashion_model import FashionMNIST_MLP  # Eğitilmiş sınıflandırıcıyı kullan
+import torch.nn.functional as F
+from sklearn.metrics import confusion_matrix
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 # ------------- Eigene Module -------------------------
 from data.data_loader import get_fashionmnist_dataloaders
 from models.gan_fashion_model import Generator,Discriminator
@@ -12,7 +18,7 @@ import os                                                           # Automatisc
 latent_dim = 100                    # Eingabegröße für Generator (Rauschen) und z ∈ ℝ¹⁰⁰
 lr = 0.0002                         # Lernrate
 batch_size = 64                     # Batchgröße
-epochs = 10                        # Anzahl der Epochen
+epochs = 10                       # Anzahl der Epochen
 
 # -------------------------------------DATEN LADEN ---------------------------------------------------------
 train_loader, _ = get_fashionmnist_dataloaders(batch_size)
@@ -98,5 +104,38 @@ np.save("../results/discriminator_loss.npy", np.array(dis_losses))
     # _ steht für die Labels, die wir im GAN nicht brauchen (deshalb ignorieren wir sie)
 # detach() verhindert, dass Gradienten zurück zum Generator fließen
 
+# ----------------------------- CONFUSION MATRIX FÜR GAN ----------------------------------------
+print("→ Starte Klassifikation der generierten Bilder durch das MLP-Modell...")
+
+# --- Trainierter Klassifikator wird geladen----------------------------------------------
+classifier = FashionMNIST_MLP().to(device)
+classifier.load_state_dict(torch.load("../results/mlp_fashion_trainierte_model.pth"))
+classifier.eval()
+
+# Generieren Sie 1000 zufällige gefälschte Bilder
+z = torch.randn(1000, latent_dim, 1, 1, device=device)
+gen_imgs = generator(z)
+
+#Vorhersagt für Classen hier ist wichtig label zu haben vom MLP
+with torch.no_grad():
+    preds = classifier(gen_imgs)
+    pred_labels = torch.argmax(preds, dim=1).cpu().numpy()
+
+#Falsch-wahr-Beschriftungen: 100 Beispiele jeder Klasse simulieren
+true_labels = np.repeat(np.arange(10), 100)
+
+# Confusion Matrix hesapla ve kaydet
+confmat = confusion_matrix(true_labels, pred_labels)
+class_names = ["T-Shirt", "Hose", "Pullover", "Kleid", "Mantel", "Sandale", "Hemd", "Turnschuh", "Tasche", "Stiefel"]
+df_cm = pd.DataFrame(confmat, columns=class_names, index=class_names)
 
 
+plt.figure(figsize=(8, 6))
+sns.heatmap(df_cm, annot=True, fmt='d', cmap='Greens')
+plt.xlabel("Vorhergesagte Klasse")
+plt.ylabel("Latente Klasse (simuliert)")
+plt.title("GAN-generierte Bilder klassifiziert durch MLP")
+plt.tight_layout()
+os.makedirs("../results", exist_ok=True)
+plt.savefig("../results/gan_confusion_matrix.png")
+plt.close()
