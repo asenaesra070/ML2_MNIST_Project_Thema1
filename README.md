@@ -19,6 +19,7 @@ Training- und Testdaten wurden mit einer Batch-Größe von 64 erfolgreich gelade
 torch.Size([64, 1, 28, 28]) für die Bilder,
 torch.Size([64]) für die Labels
 → Das bedeutet, 64 Graustufenbilder (1 Kanal) mit 28x28 Pixeln wurden korrekt geladen.
+![image](https://github.com/user-attachments/assets/126823ce-f9b7-445c-8e5b-e994a24f243f)
 
 
 ![image](https://github.com/user-attachments/assets/11cc36bc-2b7b-4b89-b39f-3da408f195c4)
