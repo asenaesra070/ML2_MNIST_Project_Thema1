@@ -73,6 +73,7 @@ for name, param in model.named_parameters():
 ![image](https://github.com/user-attachments/assets/32b34d97-1919-4535-aae4-050082e534ef)
 ![image](https://github.com/user-attachments/assets/c137b8d6-eb4d-41c2-8443-f8603c231166)
 
+![image](https://github.com/user-attachments/assets/ee1700eb-526d-4f23-ab71-731eeb4ae4f8)
 
 # Bewertung GAN mit MLP Labels
 ![image](https://github.com/user-attachments/assets/8cfb9264-0d07-48c7-8242-b516edc5a7b6)
