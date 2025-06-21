@@ -69,5 +69,10 @@ for name, param in model.named_parameters():
 | `ConvTranspose2d(latent_dim, 128, 7, 1, 0)` | Erstellt eine 7x7-Feature-Map mit 128 Filtern |
 | `→ 64 → 1` | Vergrößert auf 14x14 und 28x28 und erreicht die tatsächliche Größe |
 | `Tanh()` | Normalisiert Pixelwerte zwischen -1 und 1 |
+# Generated Bild mit unterscheidlichen Ausgangneurons und Kernel_Size
+![image](https://github.com/user-attachments/assets/32b34d97-1919-4535-aae4-050082e534ef)
+![image](https://github.com/user-attachments/assets/c137b8d6-eb4d-41c2-8443-f8603c231166)
+
+
 # Bewertung GAN mit MLP Labels
 ![image](https://github.com/user-attachments/assets/8cfb9264-0d07-48c7-8242-b516edc5a7b6)
