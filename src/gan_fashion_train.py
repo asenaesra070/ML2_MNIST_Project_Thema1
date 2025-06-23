@@ -51,6 +51,7 @@ for epoch in range(epochs):
 
         # Echte Bilder vorbereiten
         real_imgs = imgs.to(device)
+        # Label Smoothing um Diskrimintaor mehr zweifeln zu lassen damit es gut Quakitat bringen 
         valid = torch.ones(imgs.size(0), 1, device=device)    # Label 1 = echt
         fake = torch.zeros(imgs.size(0), 1, device=device)    # Label 0 = fake
 
